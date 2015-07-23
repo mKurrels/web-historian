@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
 var http = require('http')
+var htmlFetcher = require('../workers/htmlfetcher')
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -40,10 +41,9 @@ exports.isUrlInList = function(url, callback){
   });
 };
 
-exports.addUrlToList = function(url, callback){
+exports.addUrlToList = function(url){
   fs.appendFile(paths.list, url + '\n', function (err) {
     if (err) throw err;
-    callback();
   });
 };
 
@@ -55,6 +55,6 @@ exports.isUrlArchived = function(url, callback){
 
 exports.downloadUrls = function(urlArray){
   _.each(urlArray, function (url) {
-    fs.appendFile(paths.archivedSites + "/" + url, "html stuff");
+    htmlFetcher.getHtml(url);
   });
 };
