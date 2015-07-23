@@ -47,10 +47,10 @@ var actions = {
             httpHelpers.sendResponse(res, fileData, 302);
           });
           // Add url to list
-          console.log("adding", newUrl, "to sites.txt.");
+          console.log(" --[ Adding ]-->", newUrl, "to sites.txt.");
           archive.addUrlToList(newUrl);
 
-          console.log("downloading", newUrl);
+          console.log(" --[ Downloading ]-->", newUrl);
           htmlFetcher.getHtml(newUrl);
         }
       });
