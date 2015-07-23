@@ -7,30 +7,38 @@ var fs = require('fs');
 
 var actions = {
   'GET': function (req, res) {
-    // This is specific to the first test -> fix this later to accept different routes
-    console.log(" ------------> req.url: ", req.url);
-
 
     if (req.url === '/') {
       var fp = archive.paths.siteAssets + "/index.html";
     } else {
       var fp = archive.paths.archivedSites + req.url;  
     }
-    
-    fs.readFile(fp, 'ascii', function (err, data) {
-      httpHelpers.sendResponse(res, data, 200);
+
+    fs.exists(fp, function (exists) {
+      if (exists) {
+        fs.readFile(fp, 'ascii', function (err, data) {
+          httpHelpers.sendResponse(res, data, 200);
+        });
+      } else {
+        httpHelpers.sendResponse(res, 'not found', 404);
+      }
     });
+
   },
   'POST': function (req, res) {
-
+    
+    httpHelpers.collectData(req, function(data){
+      var newUrl = JSON.parse(data);
+      fs.appendFile(archive.paths.list, newUrl.url + '\n', function (err) {
+        if (err) throw err;
+        httpHelpers.sendResponse(res, "Redirected", 302);
+      });
+    })
   },
   'OPTIONS': function (req, res) {
-
+    httpHelpers.sendResponse(res);
   }
-  
-  // res.end(archive.paths.list);
 };
-
 
 exports.handleRequest = function (req, res) {
   var action = actions[req.method];
