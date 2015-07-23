@@ -26,11 +26,14 @@ var actions = {
 
   },
   'POST': function (req, res) {
-    
+
     httpHelpers.collectData(req, function(data){
       var newUrl = JSON.parse(data);
-      fs.appendFile(archive.paths.list, newUrl.url + '\n', function (err) {
-        if (err) throw err;
+      // fs.appendFile(archive.paths.list, newUrl.url + '\n', function (err) {
+      //   if (err) throw err;
+      //   httpHelpers.sendResponse(res, "Redirected", 302);
+      // });
+      archive.addUrlToList(newUrl.url, function(){
         httpHelpers.sendResponse(res, "Redirected", 302);
       });
     })
